@@ -8,6 +8,8 @@ module.exports = app => {
 
     const users = require("../models").Users;
 
+    const Expenses = require("../controllers/expenseController")
+
     app.get("/", (req, res) => {
         res.send("Working Fine!!");
     });
@@ -87,5 +89,14 @@ module.exports = app => {
 
     app.get("/users", async (req, res) => {
         users.findAll().then(resp => res.send(resp))
+    })
+
+    app.post("/expense", async (req, res) => {
+        let resp = await Expenses.addExpense(req.body)
+        res.send(resp)
+    })
+
+    app.get("/expense", async (req, res) => {
+        Expenses.getExpense().then(resp => res.send(resp))
     })
 }

@@ -5,6 +5,11 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
+import AddExpense from "./AddExpense";
+import ListView from "./ListView";
+
+import Axios from "axios";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -24,12 +29,18 @@ const HomePage = () => {
   const [currId, setCurrid] = useState();
   const [showLogin, setShowLogin] = useState(false);
 
+  const [invites, setInvites] = useState([]);
+  const [expenses, setExpense] = useState([]);
+  const [users, setUsers] = useState([]);
+
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("userToken"));
     if (data != null) {
       setUid(data.id);
       setCurrid(data.uid);
       setShowLogin(data.validity);
+      getExpenses();
+      getUsers();
     } else {
       setShowLogin(false);
     }
@@ -46,6 +57,34 @@ const HomePage = () => {
 
   const signUp = () => {
     window.location.href = "/signup";
+  };
+
+  const getExpenses = () => {
+    Axios.get("http://localhost:4000/expense").then((res) => {
+      console.log("EXPENSE GET", res);
+      if (res.status === 200) {
+        setExpense([...res.data]);
+      }
+    });
+  };
+
+  const getUsers = () => {
+    Axios.get("http://localhost:4000/users").then((res) => {
+      console.log("USERS GET", res);
+      if (res.status === 200) {
+        setUsers([...res.data]);
+      }
+    });
+  };
+
+  const addExpense = (data) => {
+    Axios.post("http://localhost:4000/expense", data).then((res) => {
+      console.log("EXPENSE POST", res);
+      if (res.status === 200) {
+        console.log("EXPENSE SUCCESS");
+        getExpenses();
+      }
+    });
   };
 
   return (
@@ -75,7 +114,13 @@ const HomePage = () => {
       <br />
       {showLogin ? (
         <div>
-          <h1>HomePage</h1>
+          <AddExpense emitData={(data) => addExpense(data)} />
+          <ListView
+            currId={currId}
+            users={users}
+            expenses={expenses}
+            invites={invites}
+          />
         </div>
       ) : (
         <span></span>
