@@ -48,7 +48,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ListView({ currId, users, expenses, invites }) {
+export default function ListView({
+  currId,
+  users,
+  expenses,
+  invites,
+  emitData,
+  getInv,
+}) {
   const classes = useStyles();
 
   const [addOpen, setAddOpen] = useState(false);
@@ -73,8 +80,9 @@ export default function ListView({ currId, users, expenses, invites }) {
     setFriends(newArr);
   }, [users]);
 
-  const handleClickOpen = (amt) => {
+  const handleClickOpen = (amt, eid) => {
     setAmount(amt);
+    getInv(currId, eid);
     setAddOpen(true);
   };
 
@@ -98,6 +106,8 @@ export default function ListView({ currId, users, expenses, invites }) {
     setAmount(0);
     setExpenseId(undefined);
     setExpenseName(undefined);
+    setTo(undefined);
+    setInviteList([]);
   };
 
   const handleDelete = (chipToDelete) => () => {
@@ -120,7 +130,14 @@ export default function ListView({ currId, users, expenses, invites }) {
   };
 
   const inviteFriends = () => {
-    console.log("CLICK");
+    let data = {
+      inviteList,
+      currId,
+      expenseId,
+    };
+
+    emitData(data);
+    handleClosez();
   };
 
   return (
@@ -151,7 +168,7 @@ export default function ListView({ currId, users, expenses, invites }) {
                     {new Date(obj.createdAt).toLocaleDateString()}
                   </Typography>
                   <Button
-                    onClick={(e) => handleClickOpen(obj.amount)}
+                    onClick={(e) => handleClickOpen(obj.amount, obj.id)}
                     color="primary"
                   >
                     View Due

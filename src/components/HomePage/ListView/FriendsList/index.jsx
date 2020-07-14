@@ -24,7 +24,9 @@ export default function FriendsList({ amount, inviteList }) {
       <Typography variant="button">Your Contribution : </Typography>
       <Typography variant="button" color="primary">
         &#8377;
-        {inviteList.length > 0 ? amount / inviteList.length : amount}
+        {inviteList.length > 0
+          ? (amount / (inviteList.length + 1)).toFixed(2)
+          : amount}
       </Typography>
       <br />
       <hr /> &nbsp;&nbsp;
@@ -38,7 +40,9 @@ export default function FriendsList({ amount, inviteList }) {
               <ListItemText
                 primary={
                   <React.Fragment>
-                    <Typography variant="button">{obj.caegory}</Typography>
+                    <Typography variant="button">
+                      {obj.User.username}
+                    </Typography>
                   </React.Fragment>
                 }
                 secondary={
@@ -50,7 +54,8 @@ export default function FriendsList({ amount, inviteList }) {
                       className={classes.inline}
                       color="textPrimary"
                     >
-                      <em>Expense Amount</em> : &#8377;{obj.amount}
+                      <em>Expense Amount</em> : &#8377;
+                      {(amount / (inviteList.length + 1)).toFixed(2)}
                       <br />
                       <em>Date of Creation</em> :{" "}
                       {new Date(obj.createdAt).toLocaleDateString()}
@@ -65,36 +70,6 @@ export default function FriendsList({ amount, inviteList }) {
       ) : (
         <Typography variant="body2">&nbsp;--NO CONTACTS ADDED YET--</Typography>
       )}
-      <List className={classes.root}>
-        {inviteList.map((obj, index) => (
-          <ListItem alignItems="flex-start">
-            <ListItemText
-              primary={
-                <React.Fragment>
-                  <Typography variant="button">{obj.caegory}</Typography>
-                </React.Fragment>
-              }
-              secondary={
-                <React.Fragment>
-                  <br />
-                  <Typography
-                    component="span"
-                    variant="body2"
-                    className={classes.inline}
-                    color="textPrimary"
-                  >
-                    <em>Expense Amount</em> : &#8377;{obj.amount}
-                    <br />
-                    <em>Date of Creation</em> :{" "}
-                    {new Date(obj.createdAt).toLocaleDateString()}
-                  </Typography>
-                  <Divider variant="inset" component="li" />
-                </React.Fragment>
-              }
-            />
-          </ListItem>
-        ))}
-      </List>
     </div>
   );
 }

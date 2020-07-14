@@ -9,6 +9,7 @@ module.exports = app => {
     const users = require("../models").Users;
 
     const Expenses = require("../controllers/expenseController")
+    const Invites = require("../controllers/inviteController")
 
     app.get("/", (req, res) => {
         res.send("Working Fine!!");
@@ -98,5 +99,16 @@ module.exports = app => {
 
     app.get("/expense", async (req, res) => {
         Expenses.getExpense().then(resp => res.send(resp))
+    })
+
+    app.post("/invite", async (req, res) => {
+        let resp = await Invites.addInvite(req.body)
+        res.send(resp)
+    })
+
+    app.post("/invites", async (req, res) => {
+        console.log(req.body)
+        let resp = await Invites.getInvite(req.body.uid, req.body.eid)
+        res.send(resp)
     })
 }

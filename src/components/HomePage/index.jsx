@@ -77,12 +77,31 @@ const HomePage = () => {
     });
   };
 
+  const getInvites = (uid, eid) => {
+    Axios.post("http://localhost:4000/invites", { uid, eid }).then((res) => {
+      console.log("INVITES GET", res);
+      if (res.status === 200) {
+        setInvites([...res.data]);
+      }
+    });
+  };
+
   const addExpense = (data) => {
     Axios.post("http://localhost:4000/expense", data).then((res) => {
       console.log("EXPENSE POST", res);
       if (res.status === 200) {
         console.log("EXPENSE SUCCESS");
         getExpenses();
+      }
+    });
+  };
+
+  const addInvites = (data) => {
+    Axios.post("http://localhost:4000/invite", data).then((res) => {
+      console.log("Invite POST", res);
+      if (res.status === 200) {
+        console.log("EXPENSE SUCCESS");
+        getInvites(currId, data.expenseId);
       }
     });
   };
@@ -120,6 +139,12 @@ const HomePage = () => {
             users={users}
             expenses={expenses}
             invites={invites}
+            emitData={(data) => {
+              addInvites(data);
+            }}
+            getInv={(uid, eid) => {
+              getInvites(uid, eid);
+            }}
           />
         </div>
       ) : (
